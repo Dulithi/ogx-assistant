@@ -16,6 +16,7 @@ const {
     OPENAI_API_KEY 
 } = process.env;
 
+console.log(OPENAI_API_KEY);
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
