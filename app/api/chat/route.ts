@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+import { openai } from '@ai-sdk/openai';
+import { streamText } from 'ai';
 import { DataAPIClient, SomeDoc } from "@datastax/astra-db-ts";
 
 const { 
@@ -10,7 +12,7 @@ const {
 } = process.env;
 
 
-const openai = new OpenAI({
+const openai_client = new OpenAI({
     apiKey: OPENAI_API_KEY,
 });
 
@@ -29,11 +31,14 @@ export async function POST(req: Request) {
         const {messages} = await req.json();
         const latestMessages = messages[messages.length - 1].content;
         let docContext = "";
-        const embedding = await  openai.embeddings.create({
+
+        const embedding = await  openai_client.embeddings.create({
             model: "text-embedding-3-small",
             input: latestMessages,
             encoding_format: "float",
         })
+
+        
 
         try {
             if (!ASTRA_DB_COLLECTION) {
@@ -51,6 +56,7 @@ export async function POST(req: Request) {
             const docsMap = documents?.map((doc: SomeDoc) => (doc.text));
             
             docContext = JSON.stringify(docsMap);
+
 
         } catch (error) {
             console.log("Error querying db ...", error);
@@ -72,22 +78,19 @@ export async function POST(req: Request) {
             ------------------`
         }
 
-        const response = await openai.responses.create({
-            model: "gpt-4o-mini",
-            stream: true,
-            input: [template, ...messages],
+        const result = streamText ({
+            model: openai("gpt-4o-mini"),
+            messages: [template, ...messages],
         });
+        result.consumeStream();
 
-        return response;
+        return result.toDataStreamResponse();
 
         // const reault = streamText({
         //     model: openai("gpt-4o-mini",
         //     prompt: template,
         // })
-
-        
-
-            
+      
 
     }catch (error) {
         console.log("Error connecting to OpenAI ...", error);

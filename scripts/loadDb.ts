@@ -1,5 +1,6 @@
 import { DataAPIClient } from "@datastax/astra-db-ts";
 import { PuppeteerWebBaseLoader } from "@langchain/community/document_loaders/web/puppeteer";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import OpenAI from "openai";
 
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
@@ -16,8 +17,6 @@ const {
     OPENAI_API_KEY 
 } = process.env;
 
-console.log(OPENAI_API_KEY);
-
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
 const oGXData = [
@@ -29,6 +28,23 @@ const oGXData = [
     'https://aiesec.org/search?programmes=9',
     'https://aiesec.org/about-us',
 ];
+
+const pdfPaths =[ 
+    "./app/assets/dataFiles/apip.pdf",
+    "./app/assets/dataFiles/annex_1.pdf",
+    "./app/assets/dataFiles/annex_2.pdf",
+    "./app/assets/dataFiles/annex_3.pdf",
+    "./app/assets/dataFiles/annex_4.pdf",
+    "./app/assets/dataFiles/annex_5.pdf",
+    "./app/assets/dataFiles/annex_6.pdf",
+    "./app/assets/dataFiles/annex_7.pdf",
+    "./app/assets/dataFiles/annex_8.pdf",
+    "./app/assets/dataFiles/annex_9.pdf",
+    "./app/assets/dataFiles/annex_10.pdf",
+    "./app/assets/dataFiles/annex_11.pdf",
+    "./app/assets/dataFiles/appendix_8.pdf",
+];
+
 
 const client = new DataAPIClient(ASTRA_DB_APPLICATION_TOKEN);
 
@@ -58,7 +74,7 @@ const createCollection = async (similarityMetric : SimilarityMetric = "dot_produ
     console.log(res);
 }
   
-const loadSampleData = async () => {
+const loadWebData = async () => {
     if (!ASTRA_DB_COLLECTION) {
         throw new Error("ASTRA_DB_COLLECTION is not defined in the environment variables.");
     }
@@ -87,6 +103,42 @@ const loadSampleData = async () => {
     }
 } 
 
+const loadPDFData = async () => {
+
+    if (!ASTRA_DB_COLLECTION) {
+        throw new Error("ASTRA_DB_COLLECTION is not defined in the environment variables.");
+    }
+    const collection = await db.collection(ASTRA_DB_COLLECTION);
+
+    for (const filePath of pdfPaths) {
+        const singleDocPerFileLoader = new PDFLoader(filePath, {
+            splitPages: false,
+        });
+        const content = await singleDocPerFileLoader.load();
+        const chunks = await splitter.splitDocuments(content);
+
+        for await ( const chunk of chunks) {
+            const chunkText = chunk.pageContent;
+
+            const embedding = await openai.embeddings.create({ 
+                model: "text-embedding-3-small", 
+                input: chunkText,
+                encoding_format: "float",
+            });
+
+            const vector = embedding.data[0].embedding;
+
+            const res = await collection.insertOne({
+                $vector : vector,
+                text: chunk,
+            });
+
+            console.log(res);
+
+        }
+    }
+}
+
 const scrapePage = async (url: string) => {
     const loader = new PuppeteerWebBaseLoader(url, {
         launchOptions: {
@@ -105,4 +157,4 @@ const scrapePage = async (url: string) => {
     return (await loader.scrape())?.replace(/<[^>]*>?/gm, "");
 }
 
-createCollection().then(() => loadSampleData());
+createCollection().then(() => loadWebData().then(() => loadPDFData()));

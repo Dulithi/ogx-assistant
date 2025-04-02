@@ -8,6 +8,9 @@
   --color-gv: #F85A40;
   --color-gte: #F48924;
   --color-gta: #0CB9C1;
+  --color-aiesec-blue: #037EF3;
+  --color-a-gray: #f5f5f5;
+  --color-a-dark-gray: #52565E;
 }
 
 * {
@@ -17,11 +20,8 @@
 body {
   margin: 0;
   padding: 0;
-  display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-image: url('./assets/flower-trail-1920x1080.png');
 }
 
 :root {

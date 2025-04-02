@@ -3,70 +3,60 @@
 import { Message, useChat } from '@ai-sdk/react';
 import { SendHorizontal } from 'lucide-react';
 import PromptSuggestionsRow from './components/PromptSuggestionsRow';
-import { appendClientMessage } from "ai"
+import ChatBubble from './components/ChatBubble';
 
 const Home = () => {
-    const { messages, input, handleSubmit, handleInputChange, status } = useChat();
+    const { messages, input, handleSubmit, handleInputChange, status, append } = useChat({});
 
     const noMessages = ! messages  || messages.length === 0;
 
-    const handlePrompt = ( promptText : string) => {
+    const handlePrompt = async ( promptText : string) => {
         const msg: Message = {
             id: crypto.randomUUID(),
             content: promptText,
             role: 'user',
         }
 
-        appendClientMessage({ messages, message: msg });
+        await append(msg);
+
     }
 
     return (
-        <main className="md:w-300 w-80 md:h-125 h-60 rounded-lg p-10 bg-stone-100 flex flex-col justify-between scroll-auto">
-            <h1 className="text-center font-extrabold text-5xl m-6"><span className="bg-clip-text text-transparent bg-gradient-to-r to-gv from-gta via-gte">oGX Assistant</span></h1>
-            <section className={noMessages? "w-full" : "h-full flex flex-col justify-end scroll-auto"}>
-                {noMessages? (
-                    <>
-                        <p className="py-0 px-8 text-center m-2 text-gray-500 text-lg"> Clarify your doubts about AIESEC Exchange program! </p>
-                        <br/>
+        <main className="flex flex-col h-screen p-4 bg-gray-100">
+             <h1 className=" text-center font-extrabold text-5xl m-6"><span className="bg-clip-text text-transparent bg-gradient-to-r to-gv from-gta via-gte">oGX Assistant</span></h1>
+            
+            <section className="flex-grow flex flex-col justify-end overflow-hidden">
+                {noMessages ? (
+                    <div className='flex flex-col items-center text-center p-6'>
+                        <p className="text-gray-500 text-lg">Clarify your doubts about the AIESEC Exchange program!</p>
+                        <br />
                         <PromptSuggestionsRow onPromptClick={handlePrompt} />
-                    </>
-                ): (
-                    <>
+                    </div>
+                ) : (
+                    <div className='overflow-y-auto flex flex-col p-4 space-y-2 max-h-[65vh] bg-white rounded-xl shadow-md'>
                         {messages.map((message) => (
-                            <div key={message.id} className={ message.role === 'user'? "chat chat-end" : "chat chat-start"}>
-                                {message.parts.map((part, index) => {
-                                    switch (part.type) {
-                                        case "text":
-                                            return(
-                                            <div key={`text-message-${index}`} className={message.role === 'user'? "chat-bubble chat-bubble-primary": "chat-bubble chat-bubble-neutral"}>
-                                                {part.text}
-                                            </div>
-                                            );
-                                    }
-                                })}
-                                
-                            </div>
+                            <ChatBubble key={message.id} message={message} />
                         ))}
-                        {status === 'streaming'  && <div className='float-left'><span className="loading loading-dots loading-md"></span></div>}
-                        
-                    </>
+                        {status !== 'ready' && <div className='text-left'><span className="loading loading-dots loading-md"></span></div>}
+                    </div>
                 )}
-               
             </section>
-            <form className="h-10 w-full flex justify-between space-x-5" onSubmit={handleSubmit}>
+            
+            <div className='p-4 bg-white shadow-md rounded-xl'>
+                <form className="flex items-center space-x-3" onSubmit={handleSubmit}>
                     <input 
-                        className="w-full p-1" 
+                        className="flex-grow p-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 outline-none"
                         type="text" 
                         value={input} 
                         onChange={handleInputChange} 
                         placeholder="Ask me something..."
                         disabled={status !== 'ready'}
                     />
-                    <button type="submit">
-                        <SendHorizontal />
+                    <button type="submit" className="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition duration-200">
+                        <SendHorizontal size={20} />
                     </button>
                 </form>
-                
+            </div>
         </main>
     );
 

@@ -10,7 +10,7 @@ const PromptSuggestionsRow = ({ onPromptClick }: { onPromptClick: (prompt: strin
         "What is the AIESEC Global Teacher Program?",]
 
     return (
-        <div className="items-center justify-items-center">
+        <div className="flex justify-center items-center flex-wrap gap-2">
             {prompts.map((prompt, index) => 
                 <PromptSuggestionButton 
                     key={`suggestion-${index}`} 
