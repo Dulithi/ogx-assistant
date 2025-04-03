@@ -1,40 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# oGX Assistant
 
-## Getting Started
+## Overview
 
-First, run the development server:
+The **oGX Assistant** is an AI-powered chatbot designed to help users access information about AIESEC's exchange programs. It provides clear and structured responses based on a combination of retrieved database content and general AI knowledge. The assistant is integrated into the AIESEC Sri Lanka website and built using **Next.js**, **LangChain**, **OpenAI**, and **DataStax Astra DB**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+
+- **AI-powered Q&A**: Provides accurate responses to user queries about AIESEC exchange programs.
+- **Embedded Knowledge Base**: Retrieves relevant context from a vector database using OpenAI embeddings.
+- **Dynamic Prompt Suggestions**: Offers predefined question buttons for easier interaction.
+- **Responsive UI**: Built with React and Tailwind CSS for a seamless user experience.
+- **Serverless API**: Utilizes Next.js API routes for backend logic.
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, Tailwind CSS
+- **Backend**: Next.js API routes
+- **AI Services**: OpenAI API (GPT-4, embeddings)
+- **Database**: DataStax Astra DB (Vector Search)
+- **Web Scraping & PDF Processing**: Puppeteer, LangChain PDF Loader
+
+---
+
+## Installation & Setup
+
+### 1. Clone the Repository
+
+```sh
+git clone https://github.com/Dulithi/ogx-assistant.git
+cd ogx-assistant
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```sh
+npm install
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### 3. Configure Environment Variables
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Create a `.env` file in the root directory and add the following:
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+ASTRA_DB_NAMESPACE=YOUR_DATASTAX_KEYSPACE
+ASTRA_DB_COLLECTION=YOUR_DB_COLLECTION_NAME
+ASTRA_DB_ENDPOINT=YOUR_ASTRA_DB_ENDPOINT
+ASTRA_DB_APPLICATION_TOKEN=YOUR_ASTRA_DB_APPLICATION_TOKEN
 
-## Learn More
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Build the Project
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+```sh
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 5. Run the Project Locally
 
-## Deploy on Vercel
+```sh
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application will start at `http://localhost:3000`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+---
+
+## Data Processing & Retrieval
+
+### 1. **Creating the Vector Database**
+
+- Uses DataStax Astra DB for vector-based semantic search.
+- Embeds text data from AIESEC’s web pages and PDF documents.
+
+### 2. **Fetching Relevant Context**
+
+- User queries are converted into embeddings.
+- The database is queried to find the most relevant context.
+- If no relevant context is found, the assistant relies on OpenAI’s general knowledge.
+
+### 3. **Generating Responses**
+
+- The AI constructs structured and informative responses using Markdown formatting.
+- The chatbot ensures accuracy and avoids hallucinations by prioritizing database information.
+
+---
+
+## Check the Deployed App
+You can access the deployed version of the app here: [oGX Assistant](https://ogx-assistant.vercel.app/)
+
+---
