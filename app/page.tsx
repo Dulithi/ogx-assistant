@@ -35,7 +35,7 @@ const Home = () => {
             {/* Chat input form */}
             <form 
                 className="border-aiesec-blue border-2 bg-background focus-within:ring-ring/10 
-                           relative mx-10 mb-4 flex items-center rounded-3xl px-3 py-1.5 text-sm 
+                           relative mx-10 mb-4 flex items-center rounded-3xl px-3 sm:py-1.5 py-1 sm:text-sm text-xm
                            focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-0"
                 onSubmit={handleSubmit} // Handle message submission
             >
