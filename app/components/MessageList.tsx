@@ -29,7 +29,7 @@ const MessageList = ({messages, status} : {messages: Message[], status: string})
             <div
             key={message.id}
             data-role={message.role}
-            className="max-w-[80%] rounded-xl px-3 py-2 text-sm data-[role=assistant]:self-start data-[role=user]:self-end data-[role=assistant]:bg-gray-100 data-[role=user]:bg-aiesec-blue data-[role=assistant]:text-black data-[role=user]:text-white"
+            className="max-w-[80%] rounded-xl px-3 py-2 sm:text-sm text-xs data-[role=assistant]:self-start data-[role=user]:self-end data-[role=assistant]:bg-gray-100 data-[role=user]:bg-aiesec-blue data-[role=assistant]:text-black data-[role=user]:text-white"
             >
             <div dangerouslySetInnerHTML={{ __html: marked(message.content, { breaks: true }) }} />
             </div>
