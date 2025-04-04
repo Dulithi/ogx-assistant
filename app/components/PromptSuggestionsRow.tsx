@@ -12,7 +12,7 @@ const PromptSuggestionsRow = ({ onPromptClick }: { onPromptClick: (prompt: strin
     ];
 
     return (
-        <div className="flex justify-center items-center flex-wrap gap-2">
+        <div className="flex justify-center items-center flex-wrap sm:gap-2 gap-1">
             {prompts.map((prompt, index) => (
                 <PromptSuggestionButton 
                     key={`suggestion-${index}`} 
