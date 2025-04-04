@@ -49,11 +49,10 @@ ASTRA_DB_APPLICATION_TOKEN=YOUR_ASTRA_DB_APPLICATION_TOKEN
 
 OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 ```
-
-### 4. Build the Project
+### 4. Seed the Database
 
 ```sh
-npm run build
+npm run seed
 ```
 
 ### 5. Run the Project Locally
@@ -63,6 +62,12 @@ npm run dev
 ```
 
 The application will start at `http://localhost:3000`.
+
+### 6. Build the Project
+
+```sh
+npm run build
+```
 
 ---
 
