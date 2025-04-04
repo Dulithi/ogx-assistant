@@ -90,3 +90,22 @@ The application will start at `http://localhost:3000`.
 You can access the deployed version of the app here: [oGX Assistant](https://ogx-assistant.vercel.app/)
 
 ---
+
+## Integration Instructions
+
+To embed the oGX Assistant on the AIESEC Sri Lanka website, you can use the provided popup integration snippet. This approach allows users to open the chat assistant in a floating modal by clicking a button — similar to popular support widgets.
+
+### Embed with a Floating Button (Popup Style)
+Include the following snippet anywhere on your HTML page:
+
+```html
+<!-- Floating Chat Button & Assistant Popup -->
+<!-- For full code, see: docs/integration-snippet.html -->
+```
+
+You can find the complete integration snippet here.
+Just replace the placeholder `your-deployment-url` with the actual URL where your assistant is hosted (e.g., Vercel or Netlify deployment).
+
+Once integrated, the assistant will appear in a popup when the floating 💬 button is clicked, giving users quick access to support about AIESEC's oGX programs.
+
+---

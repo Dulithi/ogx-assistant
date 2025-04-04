@@ -1,0 +1,36 @@
+<!-- Include this anywhere in your page -->
+<button id="ogx-chat-button" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #037EF3;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 100%;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 9999;
+">💬</button>
+
+<iframe id="ogx-chat-frame" title="ogx-assistant" src="your-deployment-url" style="
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 400px;
+  height: 500px;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 9999;
+"></iframe>
+
+<script>
+  const btn = document.getElementById("ogx-chat-button");
+  const iframe = document.getElementById("ogx-chat-frame");
+
+  btn.addEventListener("click", () => {
+    iframe.style.display = iframe.style.display === "none" ? "block" : "none";
+  });
+</script>
